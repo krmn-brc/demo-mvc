@@ -5,17 +5,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Proje dosyalarını kopyala
-COPY *.csproj ./
-RUN dotnet restore
+COPY . .
 
-# Uygulama dosyalarını kopyala
-COPY . ./
-RUN dotnet publish -c Release -o out
-
+# RUN dotnet publish -c Release --property:PublishDir=/out
+RUN dotnet publish -c Release -o /out
 # Çalıştırılabilir imaj oluştur
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out ./
+COPY --from=build /out .
 
 # Uygulamayı başlat
 ENTRYPOINT ["dotnet", "demo-mvc.dll"]
