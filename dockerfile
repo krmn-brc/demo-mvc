@@ -1,18 +1,10 @@
-# Temel imaj olarak .NET SDK kullan
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-
-# Çalışma dizinini ayarla
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-
-# Proje dosyalarını kopyala
 COPY . .
+RUN dotnet restore
+RUN dotnet publish demo-mvc.csproj -c Release -o /out
 
-RUN dotnet publish -c Release --property:PublishDir=/out
-# RUN dotnet publish -c Release -o /out
-# Çalıştırılabilir imaj oluştur
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build-env /out .
-
-# Uygulamayı başlat
+COPY --from=build /out .
 ENTRYPOINT ["dotnet", "demo-mvc.dll"]
