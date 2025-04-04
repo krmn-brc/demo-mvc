@@ -7,8 +7,8 @@ WORKDIR /app
 # Proje dosyalarını kopyala
 COPY . .
 
-# RUN dotnet publish -c Release --property:PublishDir=/out
-RUN dotnet publish -c Release -o /out
+RUN dotnet publish -c Release --property:PublishDir=/out
+# RUN dotnet publish -c Release -o /out
 # Çalıştırılabilir imaj oluştur
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
